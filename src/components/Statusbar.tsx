@@ -4,11 +4,12 @@ import { useGameplaySelector } from '../app/store';
 type Props = {}
 
 const Statusbar = (props: Props) => {
-  const [balance, currentBetTotal] = useGameplaySelector(gp => [gp.balance, gp.currentBetTotal]);
+  const [balance, currentBetTotal, currentWinnings] = useGameplaySelector(gp => [gp.balance, gp.currentBetTotal, gp.currentWinnings]);
   return (
     <div className={classes.statusBar}>
-      <div className={classes.balance}>Balance: ${balance.toString()}</div>
-      <div className={classes.currentBetTotal}>Current Bet: ${currentBetTotal.toString()}</div>
+      <div className={classes.balance}><span className={classes.label}>Balance:</span> <span className={classes.text}>{balance.toString()}</span></div>
+      <div className={classes.currentBetTotal}><span className={classes.label}>Bet:</span> <span className={classes.text}>{currentBetTotal.toString()}</span></div>
+      <div className={classes.totalWinnings}><span className={classes.label}>Win:</span> <span className={classes.text}>{currentWinnings.toString()}</span></div>
     </div>
   )
 }
