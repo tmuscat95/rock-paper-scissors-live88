@@ -1,19 +1,20 @@
 import React, { useCallback } from 'react'
 import classes from '../styles/squares.module.scss';
 import { useGameplaySelector } from '../app/store';
-import { RockPaperScissors } from '../Enum';
+import { RockPaperScissorsOptions } from '../Enum';
 import Chip from './Chip';
 import { useDispatch } from 'react-redux';
 import { GamePlayActions } from '../app/gameplay/gameplaySlice';
 import { BET_AMOUNT } from '../Constants';
+import { D } from '../Functions';
 type Props = {}
 
 //@ts-ignore
 
 
-const Square = ({type}: {type: RockPaperScissors}) => {
-  const [gameState, isWinner] = useGameplaySelector(gp => [gp.gameState,gp.currentWinner === type]);
-  const bet = useGameplaySelector(gp => gp.currentBet[type]);
+const Square = ({type}: {type: RockPaperScissorsOptions}) => {
+  const [gameState, isWinner] = useGameplaySelector(gp => [gp.gameState,gp.roundWinningChoice === type]);
+  const bet = useGameplaySelector(gp => D(gp.currentBet[type]));
   const dispatch = useDispatch();
 
   const placeBet = (e: React.MouseEvent<HTMLDivElement>)=>{
@@ -23,7 +24,7 @@ const Square = ({type}: {type: RockPaperScissors}) => {
       if(!bet.greaterThan(0)) return;
       dispatch(GamePlayActions.undoBet(type));
     } else 
-      dispatch(GamePlayActions.placeBet({ type, amount: BET_AMOUNT }));
+      dispatch(GamePlayActions.placeBet({ type, amount: BET_AMOUNT.toString() }));
   }
 
   return (
@@ -37,9 +38,9 @@ const Square = ({type}: {type: RockPaperScissors}) => {
 const Squares = (props: Props) => {
   return (
     <div className={classes.squares}>
-        <Square type={RockPaperScissors.ROCK} />
-        <Square type={RockPaperScissors.PAPER} />
-        <Square type={RockPaperScissors.SCISSORS} />
+        <Square type={RockPaperScissorsOptions.ROCK} />
+        <Square type={RockPaperScissorsOptions.PAPER} />
+        <Square type={RockPaperScissorsOptions.SCISSORS} />
       </div>
   )
 }

@@ -1,19 +1,26 @@
 import { Decimal } from "decimal.js";
-import { Results, RockPaperScissors } from "./Enum";
+import { Results, RockPaperScissorsOptions as RockPaperScissorsOptions } from "./Enum";
 
 export const D = (n: Decimal.Value) => new Decimal(n);
 
-export function doRockPaperScissors(player1: RockPaperScissors, player2: RockPaperScissors): Results {
-  if (player1 === player2) {
+export function doRockPaperScissors(playerChoice: RockPaperScissorsOptions, computerChoice: RockPaperScissorsOptions): Results {
+  if (playerChoice === computerChoice) {
     return Results.DRAW;
   }
 
-  switch (player1) {
-    case RockPaperScissors.ROCK:
-      return player2 === RockPaperScissors.SCISSORS ? Results.WIN : Results.LOSE;
-    case RockPaperScissors.PAPER:
-      return player2 === RockPaperScissors.ROCK ? Results.WIN : Results.LOSE;
-    case RockPaperScissors.SCISSORS:
-      return player2 === RockPaperScissors.PAPER ? Results.WIN : Results.LOSE;
+  switch (playerChoice) {
+    case RockPaperScissorsOptions.ROCK:
+      return computerChoice === RockPaperScissorsOptions.SCISSORS ? Results.WIN : Results.LOSE;
+    case RockPaperScissorsOptions.PAPER:
+      return computerChoice === RockPaperScissorsOptions.ROCK ? Results.WIN : Results.LOSE;
+    case RockPaperScissorsOptions.SCISSORS:
+      return computerChoice === RockPaperScissorsOptions.PAPER ? Results.WIN : Results.LOSE;
   }
 } 
+
+export function selectOptionRandom(): RockPaperScissorsOptions {
+  const options = Object.values(RockPaperScissorsOptions);
+  return options[Math.floor(Math.random() * options.length)]; //I know you can't use Math.random() in prod for iGaming applications.
+}
+
+export const sleep = (t:number) => new Promise(resolve => setTimeout(resolve, t));

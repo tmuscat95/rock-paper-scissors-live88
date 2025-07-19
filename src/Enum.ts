@@ -4,7 +4,7 @@ export enum GameState {
   WINNINGS = "WINNINGS",
 } 
 
-export enum RockPaperScissors {
+export enum RockPaperScissorsOptions {
   ROCK = "ROCK",
   PAPER = "PAPER",
   SCISSORS = "SCISSORS",

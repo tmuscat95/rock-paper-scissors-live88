@@ -1,5 +1,5 @@
 import type Decimal from "decimal.js";
-import type { RockPaperScissors } from "./Enum";
+import type { RockPaperScissorsOptions } from "./Enum";
 
 export type User = {
   id: string;
@@ -9,5 +9,5 @@ export type User = {
 
 
 export type Bet = {
-  [key in RockPaperScissors]: Decimal;
+  [key in RockPaperScissorsOptions]: string;
 };

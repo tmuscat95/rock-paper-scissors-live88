@@ -21,5 +21,9 @@
 
   .text {
     color: rgb(249,249, 249);
+    display: inline-block;
+    min-width: 10ch;
+    max-width: 10ch;
+    text-align: left;
   }
 }

@@ -1,4 +1,3 @@
-import React from 'react'
 import classes from '../styles/Game.module.scss';
 import Play from './Play';
 import Messages from './Messages';
@@ -7,14 +6,15 @@ import Statusbar from './Statusbar';
 
 
 const Game = () => {
+
   return (
     <>
-    <div className={classes.game}>
-      <Statusbar />
-      <Messages/>
-      <Squares/>
-      <Play />
-    </div>
+      <div className={classes.game}>
+        <Statusbar />
+        <Messages/>
+        <Squares/>
+        <Play />
+      </div>
     </>
   )
 }

@@ -1,33 +1,35 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Bet } from '../../Types';
 import Decimal from 'decimal.js';
-import { D } from '../../Functions';
-import { GameState, RockPaperScissors } from '../../Enum';
-import { BET_AMOUNT } from '../../Constants';
-
-const betTypeSet = new Set(Object.values(RockPaperScissors));
+import { D, doRockPaperScissors, selectOptionRandom } from '../../Functions';
+import { GameState, Results, RockPaperScissorsOptions } from '../../Enum';
+import { BET_AMOUNT, PAYOUT_MULTIPLIER_1_BET, PAYOUT_MULTIPLIER_2_BETS } from '../../Constants';
 
 export interface GameplayState {
   currentBet: Bet;
-  currentBetTotal: Decimal;
+  currentBetTotal: string;
   gameState: GameState
-  balance: Decimal;
-  currentWinnings: Decimal;
-  totalWinnings: Decimal;
-  currentWinner: RockPaperScissors | null; // Added to track the current winner
+  balance: string;
+  currentWinnings: string;
+  totalWinnings: string;
+  roundWinningChoice?: RockPaperScissorsOptions; 
+  computerChoice?: RockPaperScissorsOptions;
+  playerDidWin?: boolean;
 }
 export const initialState: GameplayState = {
   currentBet: {
-    [RockPaperScissors.ROCK]: D(0),
-    [RockPaperScissors.PAPER]: D(0),
-    [RockPaperScissors.SCISSORS]: D(0),
+    [RockPaperScissorsOptions.ROCK]: D(0).toString(),
+    [RockPaperScissorsOptions.PAPER]: D(0).toString(),
+    [RockPaperScissorsOptions.SCISSORS]: D(0).toString(),
   },
-  currentBetTotal: D(0), //never use number for money; floating point precision issues
+  currentBetTotal: D(0).toString(), //never use number for money; floating point precision issues
   gameState: GameState.BETTING,
-  balance: D(5000),
-  currentWinnings: D(0),
-  totalWinnings: D(0),
-  currentWinner: null,
+  balance: D(5000).toString(),
+  currentWinnings: D(0).toString(),
+  totalWinnings: D(0).toString(),
+  roundWinningChoice: undefined,
+  computerChoice: undefined,
+  playerDidWin: undefined, 
 };
 const gameplaySlice = createSlice({
   name: 'gameplay',
@@ -35,33 +37,71 @@ const gameplaySlice = createSlice({
   reducers: {
     setBet(state, action: PayloadAction<Bet>) {
       state.currentBet = action.payload;
-      state.currentBetTotal = D(action.payload[RockPaperScissors.ROCK]).plus(action.payload[RockPaperScissors.PAPER]).plus(action.payload[RockPaperScissors.SCISSORS]);
+      state.currentBetTotal = D(action.payload[RockPaperScissorsOptions.ROCK]).plus(action.payload[RockPaperScissorsOptions.PAPER]).plus(action.payload[RockPaperScissorsOptions.SCISSORS]).toString();
     },
     resetBet(state) {
       state.currentBet = initialState.currentBet;
       state.currentBetTotal = initialState.currentBetTotal;
     },
     addWinnings(state, action: PayloadAction<Decimal>) {
-      state.currentWinnings = action.payload;
-      state.totalWinnings = state.totalWinnings.plus(action.payload);
+      state.currentWinnings = action.payload.toString();
+      state.totalWinnings = D(state.totalWinnings).plus(action.payload).toString();
     },
     setGameState(state, action: PayloadAction<GameState>) {
-      state.gameState = action.payload;
+    
       if(action.payload === GameState.BETTING) {
+        state.playerDidWin = undefined;
+        state.balance = D(state.balance).plus(state.currentWinnings).toString();
+        state.currentWinnings = D(0).toString();
         state.currentBet = initialState.currentBet;
-        state.currentBetTotal = D(0);
-        state.currentWinnings = D(0);
-        state.currentWinner = null;
+        state.currentBetTotal = D(0).toString();
+        state.roundWinningChoice = undefined;
+        state.computerChoice = undefined;
       }
-    },
-    setWinner(state, action: PayloadAction<RockPaperScissors | null>) {
-      state.currentWinner = action.payload;
-    },
-    placeBet(state, action: PayloadAction<{ type: RockPaperScissors; amount: Decimal }>) {
-      const { type, amount } = action.payload;
-      const otherBetTypes = Object.values(RockPaperScissors).filter(t => t !== type);
+      if(action.payload === GameState.WINNINGS) {
+        let numberOfBets = Object.values(state.currentBet).filter(bet => D(bet).gt(0)).length;
+        if(numberOfBets === 0) return;
 
-      if(otherBetTypes.every((t) => state.currentBet[t].gt(0))){
+        let returnAmount = D(0);
+        let win = false;
+        let result = Results.LOSE;
+        for(const [key, bet] of Object.entries(state.currentBet)) {
+          if(D(bet).gt(0)) {
+            result = doRockPaperScissors(key as RockPaperScissorsOptions, state.computerChoice!)
+            if(result === Results.WIN) {
+              win = true;
+              state.roundWinningChoice = key as RockPaperScissorsOptions;
+              break;
+            }else {
+              state.roundWinningChoice = state.computerChoice!;
+            } 
+          }
+        }
+        
+        if(win) {
+          if(numberOfBets === 1) {
+            returnAmount = D(state.currentBetTotal).times(PAYOUT_MULTIPLIER_1_BET);
+          } else if(numberOfBets === 2) {
+            returnAmount = D(state.currentBetTotal).times(PAYOUT_MULTIPLIER_2_BETS);
+          }
+        } else if(numberOfBets === 1 && result === Results.DRAW) {
+          returnAmount = D(state.currentBetTotal);
+        }
+        state.playerDidWin = win;
+        state.currentWinnings = returnAmount.toString();
+        state.totalWinnings = D(state.totalWinnings).plus(returnAmount).toString();
+      }
+      
+        state.gameState = action.payload;
+    },
+    // setWinner(state, action: PayloadAction<RockPaperScissorsOptions | null>) {
+    //   state.currentWinner = action.payload;
+    // },
+    placeBet(state, action: PayloadAction<{ type: RockPaperScissorsOptions; amount: string }>) {
+      const { type, amount } = action.payload;
+      const otherBetTypes = Object.values(RockPaperScissorsOptions).filter(t => t !== type);
+
+      if(otherBetTypes.every((t) => D(state.currentBet[t]).gt(0))){
         console.warn(`Cannot place bet on all 3 at once`);
         alert(`Cannot place bet on all 3 at once`);
         return;
@@ -69,32 +109,40 @@ const gameplaySlice = createSlice({
       /**
        * Maybe in the future you want to make Rock, Paper,Scissors, Lizard, Spock, or something, this way no need to rewrite this logic
        */
-      if(otherBetTypes.every((t) => state.currentBet[t].gt(0))){
+      if(otherBetTypes.every((t) => D(state.currentBet[t]).gt(0))){
         console.warn(`Cannot place bet on all 3 at once`);
         alert(`Cannot place bet on all 3 at once`);
         return;
       } 
 
-      if (state.balance.gte(amount)) {
-        state.currentBet[type] = state.currentBet[type].plus(amount);
-        state.balance = state.balance.minus(amount);
+      if (D(state.balance).gte(amount)) {
+        state.currentBet[type] = D(state.currentBet[type]).plus(amount).toString();
+        state.balance = D(state.balance).minus(amount).toString();
+        state.currentBetTotal = D(state.currentBet[RockPaperScissorsOptions.ROCK])
+          .plus(state.currentBet[RockPaperScissorsOptions.PAPER])
+          .plus(state.currentBet[RockPaperScissorsOptions.SCISSORS]).toString();
       }else {
         console.warn(`Insufficient balance`);
         alert(`Insufficient balance`);
         return;
       }
     },
-    undoBet(state, action: PayloadAction<RockPaperScissors>) {
-      if(state.currentBet[action.payload].eq(0)) return;
-      state.currentBet[action.payload] = state.currentBet[action.payload].minus(BET_AMOUNT);
-      if (state.currentBet[action.payload].lt(0)) {
-        state.currentBet[action.payload] = D(0);
+    undoBet(state, action: PayloadAction<RockPaperScissorsOptions>) {
+      if(D(state.currentBet[action.payload]).eq(0)) return;
+      state.currentBet[action.payload] = D(state.currentBet[action.payload]).minus(BET_AMOUNT).toString();
+      if (D(state.currentBet[action.payload]).lt(0)) {
+        state.currentBet[action.payload] = D(0).toString();
       }
-      state.balance = state.balance.plus(BET_AMOUNT);
-      state.currentBetTotal = D(state.currentBet[RockPaperScissors.ROCK])
-        .plus(state.currentBet[RockPaperScissors.PAPER])
-        .plus(state.currentBet[RockPaperScissors.SCISSORS]);
-    }
+      state.balance = D(state.balance).plus(BET_AMOUNT).toString();
+      state.currentBetTotal = D(state.currentBet[RockPaperScissorsOptions.ROCK])
+        .plus(state.currentBet[RockPaperScissorsOptions.PAPER])
+        .plus(state.currentBet[RockPaperScissorsOptions.SCISSORS]).toString();
+    },
+    play(state){
+      if(D(state.currentBetTotal).eq(0)) return;
+      state.computerChoice = selectOptionRandom()
+      state.gameState = GameState.PLAYING;
+    },
   },
 });
 
