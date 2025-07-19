@@ -16,6 +16,7 @@
       border-radius: 5%;
       font-weight: 700;
       position: relative;
+      user-select: none;
 
       &.betting {
         cursor: pointer;

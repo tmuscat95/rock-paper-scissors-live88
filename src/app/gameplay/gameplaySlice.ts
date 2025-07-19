@@ -3,6 +3,9 @@ import type { Bet } from '../../Types';
 import Decimal from 'decimal.js';
 import { D } from '../../Functions';
 import { GameState, RockPaperScissors } from '../../Enum';
+import { BET_AMOUNT } from '../../Constants';
+
+const betTypeSet = new Set(Object.values(RockPaperScissors));
 
 export interface GameplayState {
   currentBet: Bet;
@@ -19,13 +22,12 @@ export const initialState: GameplayState = {
     [RockPaperScissors.PAPER]: D(0),
     [RockPaperScissors.SCISSORS]: D(0),
   },
-  currentBetTotal: D(0),
+  currentBetTotal: D(0), //never use number for money; floating point precision issues
   gameState: GameState.BETTING,
   balance: D(5000),
   currentWinnings: D(0),
   totalWinnings: D(0),
   currentWinner: null,
-
 };
 const gameplaySlice = createSlice({
   name: 'gameplay',
@@ -54,6 +56,44 @@ const gameplaySlice = createSlice({
     },
     setWinner(state, action: PayloadAction<RockPaperScissors | null>) {
       state.currentWinner = action.payload;
+    },
+    placeBet(state, action: PayloadAction<{ type: RockPaperScissors; amount: Decimal }>) {
+      const { type, amount } = action.payload;
+      const otherBetTypes = Object.values(RockPaperScissors).filter(t => t !== type);
+
+      if(otherBetTypes.every((t) => state.currentBet[t].gt(0))){
+        console.warn(`Cannot place bet on all 3 at once`);
+        alert(`Cannot place bet on all 3 at once`);
+        return;
+      }
+      /**
+       * Maybe in the future you want to make Rock, Paper,Scissors, Lizard, Spock, or something, this way no need to rewrite this logic
+       */
+      if(otherBetTypes.every((t) => state.currentBet[t].gt(0))){
+        console.warn(`Cannot place bet on all 3 at once`);
+        alert(`Cannot place bet on all 3 at once`);
+        return;
+      } 
+
+      if (state.balance.gte(amount)) {
+        state.currentBet[type] = state.currentBet[type].plus(amount);
+        state.balance = state.balance.minus(amount);
+      }else {
+        console.warn(`Insufficient balance`);
+        alert(`Insufficient balance`);
+        return;
+      }
+    },
+    undoBet(state, action: PayloadAction<RockPaperScissors>) {
+      if(state.currentBet[action.payload].eq(0)) return;
+      state.currentBet[action.payload] = state.currentBet[action.payload].minus(BET_AMOUNT);
+      if (state.currentBet[action.payload].lt(0)) {
+        state.currentBet[action.payload] = D(0);
+      }
+      state.balance = state.balance.plus(BET_AMOUNT);
+      state.currentBetTotal = D(state.currentBet[RockPaperScissors.ROCK])
+        .plus(state.currentBet[RockPaperScissors.PAPER])
+        .plus(state.currentBet[RockPaperScissors.SCISSORS]);
     }
   },
 });
