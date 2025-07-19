@@ -15,9 +15,9 @@ export interface GameplayState {
 }
 export const initialState: GameplayState = {
   currentBet: {
-    rock: D(0),
-    paper: D(0),
-    scissors: D(0),
+    [RockPaperScissors.ROCK]: D(0),
+    [RockPaperScissors.PAPER]: D(0),
+    [RockPaperScissors.SCISSORS]: D(0),
   },
   currentBetTotal: D(0),
   gameState: GameState.BETTING,
@@ -33,7 +33,7 @@ const gameplaySlice = createSlice({
   reducers: {
     setBet(state, action: PayloadAction<Bet>) {
       state.currentBet = action.payload;
-      state.currentBetTotal = D(action.payload.rock).plus(action.payload.paper).plus(action.payload.scissors);
+      state.currentBetTotal = D(action.payload[RockPaperScissors.ROCK]).plus(action.payload[RockPaperScissors.PAPER]).plus(action.payload[RockPaperScissors.SCISSORS]);
     },
     resetBet(state) {
       state.currentBet = initialState.currentBet;

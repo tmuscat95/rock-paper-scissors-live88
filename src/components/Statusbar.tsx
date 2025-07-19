@@ -1,9 +1,8 @@
 import React from 'react'
 import classes from '../styles/statusbar.module.scss';
 import { useGameplaySelector } from '../app/store';
-type Props = {}
 
-const Statusbar = (props: Props) => {
+const Statusbar = () => {
   const [balance, currentBetTotal, currentWinnings] = useGameplaySelector(gp => [gp.balance, gp.currentBetTotal, gp.currentWinnings]);
   return (
     <div className={classes.statusBar}>
