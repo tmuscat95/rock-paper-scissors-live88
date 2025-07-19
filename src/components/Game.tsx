@@ -1,9 +1,8 @@
 import React from 'react'
 import classes from '../styles/Game.module.scss';
-import Square from './Square';
 import Play from './Play';
 import Messages from './Messages';
-import { RockPaperScissors } from '../Enum';
+import Squares from './Square';
 
 
 const Game = () => {
@@ -11,11 +10,7 @@ const Game = () => {
     <>
     <div className={classes.game}>
       <Messages/>
-      <div className={classes.squares}>
-        <Square type={RockPaperScissors.ROCK} />
-        <Square type={RockPaperScissors.PAPER} />
-        <Square type={RockPaperScissors.SCISSORS} />
-      </div>
+      <Squares/>
       <Play />
     </div>
     </>

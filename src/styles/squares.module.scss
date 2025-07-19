@@ -1,0 +1,52 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+ .squares {
+    @include flexRow;
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+    gap:25px;
+
+    .square {
+      @include flexColumn;
+      font-size: 20px;
+      width: 160px;
+      height: 100px;
+      border-radius: 5%;
+      font-weight: 700;
+
+      &.betting {
+        cursor: pointer;
+      }
+
+      &.rock {
+        background-color: $rock-button-bg;
+        border: 2px solid $rock-button-border;
+        color: $text-white;
+      }
+
+      &.paper {
+        background-color: $paper-button-bg;
+        border: 2px solid $paper-button-border;
+        color: $text-white;
+      }
+
+      &.scissors {
+        background-color: $scissors-button-bg;
+        border: 2px solid $scissors-button-border;
+        color: $text-white;
+      }
+
+      .chip {
+        @include flexColumn;
+        font-size: 14px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-weight: 700;
+        border: 5px solid blue;
+        color: rgb(0,0,0);
+      }
+    }
+  }
