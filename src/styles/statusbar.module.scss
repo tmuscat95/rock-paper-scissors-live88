@@ -1,0 +1,14 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.statusBar {
+  @include flexRow;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: darken($primary-color, 5%);
+  color: white;
+
+  .balance {
+    font-weight: bold;
+  }
+}
