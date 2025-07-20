@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef } from 'react'
+import React, { useLayoutEffect, useRef } from 'react'
 import classes from '../styles/messages.module.scss';
 import { useGameplaySelector } from '../app/store';
 import { GameState } from '../Enum';
@@ -26,20 +26,20 @@ const Messages = (props: Props) => {
     case GameState.PLAYING:
       message = <div className={classes.playing}>
         <div ref={computerChoiceDivRef} className={classes.computerChoice}><span ref={computerChoiceSpanRef}></span></div>
-        <div className={classes.vs}>VS</div>
-        <div className={classes.playerChoices}>
-          {Object.entries(currentBet).filter(([key, value]) => (D(value).gt(0))).map(([key, value]) => (
-            <div key={key} className={classes.playerChoice}>
-              <span>{key.toUpperCase()}</span> 
-            </div>
-          ))}
-        </div>
-      </div>;
+          <div className={classes.vs}>VS</div>
+          <div className={classes.playerChoices}>
+            {Object.entries(currentBet).filter(([key, value]) => (D(value).gt(0))).map(([key, value]) => (
+              <div key={key} className={classes.playerChoice}>
+                <span>{key.toUpperCase()}</span> 
+              </div>
+            ))}
+          </div>
+        </div>;
       break;
     case GameState.WINNINGS:
       message = <div className={classes.winnings}>
         <div className={`${classes.won}`}>{`${roundWinningChoice?.toUpperCase()} WON`}</div>
-        {playerDidWin && currentWinnings && D(currentWinnings).gt(0) && <div className={`${classes.amountWon}`}><span>YOU WIN: </span><span><span ref={currentWinningsRef}>{/* {currentWinnings.toString()} */}</span></span></div>}
+        {playerDidWin && currentWinnings && D(currentWinnings).gt(0) && <div className={`${classes.amountWon}`}><span>YOU WIN: </span><span ref={currentWinningsRef}>{/* {currentWinnings.toString()} */}</span></div>}
       </div>;
       break;
     default:
@@ -48,12 +48,17 @@ const Messages = (props: Props) => {
 
   useLayoutEffect(() => {
     if(gameState === GameState.PLAYING && computerChoice && computerChoiceSpanRef.current) {
+      let previousStep = 0;
+      const steps = 40;
       gsap.to(computerChoiceSpanRef.current, {
         duration: 2.5,
-        ease:'linear',
-        gap: 0.40,
-        onUpdate: () => {
-          computerChoiceSpanRef.current!.textContent = selectOptionRandom();
+        ease:`steps(${steps})`,
+        onUpdate: function () {
+          const currentStep = Math.floor(this.progress() * steps);
+          if(currentStep !== previousStep) {
+            previousStep = currentStep;
+            computerChoiceSpanRef.current!.textContent = selectOptionRandom();
+          }
         },
         onComplete: () => {
           computerChoiceSpanRef.current!.textContent = computerChoice;
@@ -73,11 +78,15 @@ const Messages = (props: Props) => {
         duration: 1.5,
         ease: 'linear',
         current: D(currentWinnings).toNumber(),
+        onStart: () => {
+          currentWinningsRef.current!.style.minWidth = `${currentWinnings.length + 3}ch`;
+        },
         onUpdate: () => {
           currentWinningsRef.current!.textContent = D(winningsDisplay.current).toFixed(2);
         },
         onComplete: () => {
           currentWinningsRef.current!.textContent = D(currentWinnings).toFixed(2);
+          currentWinningsRef.current!.classList.add('animate__animated', 'animate__pulse');
         }
       });
     }
