@@ -14,6 +14,8 @@ const Messages = (props: Props) => {
   const [gameState, currentBet, computerChoice, roundWinningChoice, currentWinnings, playerDidWin] = useGameplaySelector(gp => [gp.gameState, gp.currentBet, gp.computerChoice, gp.roundWinningChoice, gp.currentWinnings, gp.playerDidWin]);
   const computerChoiceSpanRef = useRef<HTMLSpanElement>(null)
   const computerChoiceDivRef = useRef<HTMLDivElement>(null);
+  const currentWinningsRef = useRef<HTMLSpanElement>(null);
+
   const dispatch = useDispatch();
   let message = <></>
 
@@ -37,7 +39,7 @@ const Messages = (props: Props) => {
     case GameState.WINNINGS:
       message = <div className={classes.winnings}>
         <div className={`${classes.won}`}>{`${roundWinningChoice?.toUpperCase()} WON`}</div>
-        {playerDidWin && currentWinnings && D(currentWinnings).gt(0) && <div className={`${classes.amountWon}`}><span>YOU WIN: </span>{currentWinnings.toString()}</div>}
+        {playerDidWin && currentWinnings && D(currentWinnings).gt(0) && <div className={`${classes.amountWon}`}><span>YOU WIN: </span><span><span ref={currentWinningsRef}>{/* {currentWinnings.toString()} */}</span></span></div>}
       </div>;
       break;
     default:
@@ -63,6 +65,24 @@ const Messages = (props: Props) => {
       });
     }
   }, [gameState, computerChoice]);
+
+    useLayoutEffect(() => {
+    if(gameState === GameState.WINNINGS && playerDidWin && currentWinningsRef.current) {
+      let winningsDisplay = {current: 0}
+      gsap.to(winningsDisplay, {
+        duration: 1.5,
+        ease: 'linear',
+        current: D(currentWinnings).toNumber(),
+        onUpdate: () => {
+          currentWinningsRef.current!.textContent = D(winningsDisplay.current).toFixed(2);
+        },
+        onComplete: () => {
+          currentWinningsRef.current!.textContent = D(currentWinnings).toFixed(2);
+        }
+      });
+    }
+  }, [gameState, playerDidWin]);
+
   return (
     <div className={`${classes.messages} ${classes[gameState]}`}>
       {message}
