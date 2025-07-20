@@ -1,19 +1,25 @@
-@use "variables.scss";
 @use "mixins.scss";
+
+$chip-border-color: #0000ff;
+$chip-background-color: rgb(249, 249, 249);
+$chip-text-color: rgb(0, 0, 0);
+$chip-font-size: 14px;
+$chip-size: 40px;
+$chip-border-width: 5px;
 
 .chip {
   @include mixins.flexColumn;
-  font-size: 14px;
-  width: 40px;
-  height: 40px;
+  font-size: $chip-font-size;
+  width: $chip-size;
+  height: $chip-size;
   border-radius: 50%;
   font-weight: 700;
-  border: 5px solid blue;
-  color: rgb(0, 0, 0);
+  border: 5px solid $chip-border-color;
+  color: $chip-text-color;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgb(249, 249, 249);
+  background: $chip-background-color;
   pointer-events: none;
 }

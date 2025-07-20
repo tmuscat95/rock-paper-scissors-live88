@@ -1,16 +1,26 @@
-@use "variables.scss";
 @use "mixins.scss";
 
+$play-button-border: #d4af37;
+$play-button-text-color: #d4af37;
+$font-size: 24px;
+$font-weight: 700;
+$height: 70px;
+$width: 170px;
+$borderWidth: 2px;
+$opacity: 0.5;
+$opacity-active: 0.7;
+$opacity-hover: 1;
+
 .play {
-  width: 170px;
-  height: 70px;
+  width: $width;
+  height: $height;
   border-radius: 50px;
-  font-size: 24px;
-  font-weight: 700;
-  border: 2px solid variables.$play-button-border;
-  color: variables.$play-button-border;
+  font-size: $font-size;
+  font-weight: $font-weight;
+  border: $borderWidth solid $play-button-border;
+  color: $play-button-text-color;
   background: transparent;
-  opacity: 0.5;
+  opacity: $opacity;
   transition: opacity 0.25s;
   @include mixins.flexColumn;
 
@@ -19,11 +29,11 @@
   }
 
   &.active {
-    opacity: 0.7;
+    opacity: $opacity-active;
     cursor: pointer;
 
     &:hover {
-      opacity: 1;
+      opacity: $opacity-hover;
     }
   }
 }

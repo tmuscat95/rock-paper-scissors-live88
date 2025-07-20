@@ -1,9 +1,11 @@
-@use "variables.scss";
 @use "mixins.scss";
+
+$background: linear-gradient(to bottom, #1c1c1c, #2d2d2d);
+
 #root {
   margin: 0 auto;
   text-align: center;
-  background-image: variables.$background;
+  background-image: $background no-repeat;
   font-family: "Roboto", sans-serif;
   user-select: none;
 }

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import classes from "../styles/messages.module.scss";
 import { useGameplaySelector } from "../app/store";
 import { GameState } from "../Enum";

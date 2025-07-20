@@ -6,14 +6,12 @@ import Statusbar from "./Statusbar";
 
 const Game = () => {
   return (
-    <>
-      <div className={classes.game}>
-        <Statusbar />
-        <Messages />
-        <Squares />
-        <Play />
-      </div>
-    </>
+    <div className={classes.game}>
+      <Statusbar />
+      <Messages />
+      <Squares />
+      <Play />
+    </div>
   );
 };
 

@@ -1,11 +1,14 @@
-@use "variables.scss";
 @use "mixins.scss";
+
+$status-bar-bg: rgb(22, 22, 22);
+$status-bar-text-color: rgb(249, 249, 249);
+$status-bar-label-color: rgb(209, 176, 125);
 
 .statusBar {
   @include mixins.flexRow;
   padding: 5px 0px;
-  background-color: variables.$status-bar-bg;
-  color: white;
+  background-color: $status-bar-bg;
+  color: $status-bar-text-color;
   font-size: 14px;
   height: 20px;
   gap: 80px;
@@ -16,11 +19,11 @@
 
   .label {
     font-weight: bold;
-    color: rgb(209, 176, 125);
+    color: $status-bar-label-color;
   }
 
   .text {
-    color: rgb(249, 249, 249);
+    color: $status-bar-text-color;
     display: inline-block;
     min-width: 10ch;
     max-width: 10ch;
