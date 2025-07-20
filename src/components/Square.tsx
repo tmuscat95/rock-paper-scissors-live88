@@ -14,9 +14,9 @@ type Props = {}
 
 const Square = ({type}: {type: RockPaperScissorsOptions}) => {
   const [gameState, isWinner] = useGameplaySelector(gp => [gp.gameState,gp.roundWinningChoice === type]);
-  const bet = useGameplaySelector(gp => D(gp.currentBet[type]));
+  const _bet = useGameplaySelector(gp => gp.currentBet[type]);
   const dispatch = useDispatch();
-
+  const bet = D(_bet);
   const placeBet = (e: React.MouseEvent<HTMLDivElement>)=>{
     e.stopPropagation();
     e.preventDefault();

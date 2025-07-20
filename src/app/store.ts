@@ -15,7 +15,13 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-const useSelector = <T>(selector: (state: RootState) => T) => baseUseSelector((state: RootState) => selector(state));
 
-export const useAppSelector = <T>(selector:(state:AppState) => T) => useSelector(state => selector(state.app));
-export const useGameplaySelector = <T>(selector: (state: GameplayState) => T) => useSelector(state => selector(state.gameplay));
+export const useAppSelector =  <T>(selector: (state: AppState) => T) =>{
+  const app = baseUseSelector((state: RootState) => state.app);
+  return selector(app);
+}
+
+export const useGameplaySelector = <T>(selector: (state: GameplayState) => T) => {
+  const gameplay = baseUseSelector((state: RootState) => state.gameplay);
+  return selector(gameplay);
+};
