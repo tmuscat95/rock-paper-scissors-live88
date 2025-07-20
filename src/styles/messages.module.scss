@@ -1,5 +1,5 @@
-@use 'variables.scss';
-@use 'mixins.scss';
+@use "variables.scss";
+@use "mixins.scss";
 
 .messages {
   @include mixins.flexRow;
@@ -7,7 +7,7 @@
   height: 30%;
   position: relative;
   .betting {
-    color: rgb(212,179,127);
+    color: rgb(212, 179, 127);
     font-weight: 700;
     align-self: flex-end;
   }
@@ -19,12 +19,13 @@
     justify-content: space-around;
     font-size: larger;
 
-    .vs{
-      color: rgb(212,179,127);
+    .vs {
+      color: rgb(212, 179, 127);
       font-size: 1.5em;
     }
 
-    .playerChoice, .computerChoice{
+    .playerChoice,
+    .computerChoice {
       font-size: 2em;
       min-width: 8ch;
       max-width: 8ch;
@@ -33,32 +34,27 @@
 
       transition: color 0.3s;
     }
-
-   
   }
 
-   .winnings {
-      font-weight: 700;
-      font-size: larger;
-      width: 50%;
+  .winnings {
+    font-weight: 700;
+    font-size: larger;
+    width: 50%;
 
-      .won {
-        color: rgb(22,195,89);
-        font-size: 2em;
+    .won {
+      color: rgb(22, 195, 89);
+      font-size: 2em;
+    }
+
+    .amountWon {
+      > span:nth-child(1) {
+        color: rgb(212, 179, 127);
       }
 
-      .amountWon {
-        > span:nth-child(1) {
-          color: rgb(212,179,127);
-        }
-
-        >span:nth-child(2) {
-          display: inline-block;
-        }
-        font-size: 1.5em;
-        
-      } 
-
-     
+      > span:nth-child(2) {
+        display: inline-block;
+      }
+      font-size: 1.5em;
     }
+  }
 }

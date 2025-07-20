@@ -2,7 +2,7 @@ export enum GameState {
   BETTING = "BETTING",
   PLAYING = "PLAYING",
   WINNINGS = "WINNINGS",
-} 
+}
 
 export enum RockPaperScissorsOptions {
   ROCK = "ROCK",

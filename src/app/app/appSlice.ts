@@ -1,6 +1,5 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { User } from '../../Types';
-
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import type { User } from "../../Types";
 
 export interface AppState {
   isAuthenticated: boolean;
@@ -9,17 +8,17 @@ export interface AppState {
 }
 
 const initialState: AppState = {
-  name: 'rock-paper-scissors',
-  isAuthenticated: true, // Assuming default is true for the sake of example
+  name: "rock-paper-scissors",
+  isAuthenticated: true, // Assuming logged in already for the sake of example
   user: {
-    id: '1',
-    name: 'Timothy Muscat',
-    email: 'timothy.muscat@example.com'
+    id: "1",
+    name: "Timothy Muscat",
+    email: "timothy.muscat@example.com",
   },
 };
 
 const appSlice = createSlice({
-  name: 'app',
+  name: "app",
   initialState,
   reducers: {
     login(state, action: PayloadAction<User>) {

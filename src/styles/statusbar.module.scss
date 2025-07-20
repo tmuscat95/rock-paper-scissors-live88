@@ -1,5 +1,5 @@
-@use 'variables.scss';
-@use 'mixins.scss';
+@use "variables.scss";
+@use "mixins.scss";
 
 .statusBar {
   @include mixins.flexRow;
@@ -8,10 +8,10 @@
   color: white;
   font-size: 14px;
   height: 20px;
-  gap:80px;
+  gap: 80px;
   width: 100%;
   position: absolute;
-  top:0px;
+  top: 0px;
   left: 0px;
 
   .label {
@@ -20,7 +20,7 @@
   }
 
   .text {
-    color: rgb(249,249, 249);
+    color: rgb(249, 249, 249);
     display: inline-block;
     min-width: 10ch;
     max-width: 10ch;
