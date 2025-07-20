@@ -1,5 +1,5 @@
-@import './variables.scss';
-@import './mixins.scss';
+@use 'variables.scss';
+@use 'mixins.scss';
 
   .play{
     width: 170px;
@@ -7,12 +7,12 @@
     border-radius: 50px;
     font-size: 24px;
     font-weight: 700;
-    border: 2px solid $play-button-border;
-    color: $play-button-border;
+    border: 2px solid variables.$play-button-border;
+    color: variables.$play-button-border;
     background: transparent;
     opacity: 0.5;
     transition: opacity 0.25s;
-    @include flexColumn;
+    @include mixins.flexColumn;
 
     > span {
       display: inline-block;

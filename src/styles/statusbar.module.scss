@@ -1,10 +1,10 @@
-@import './variables.scss';
-@import './mixins.scss';
+@use 'variables.scss';
+@use 'mixins.scss';
 
 .statusBar {
-  @include flexRow;
+  @include mixins.flexRow;
   padding: 5px 0px;
-  background-color: $status-bar-bg;
+  background-color: variables.$status-bar-bg;
   color: white;
   font-size: 14px;
   height: 20px;

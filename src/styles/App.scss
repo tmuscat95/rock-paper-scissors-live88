@@ -1,5 +1,5 @@
-@import './variables.scss';
-@import './mixins.scss';
+@use 'variables.scss';
+@use 'mixins.scss';
 #root {
   // @include flexColumn;
   // width: 100%;
@@ -7,7 +7,7 @@
   margin: 0 auto;
   //padding: 2rem;
   text-align: center;
-  background-image: $background;
+  background-image: variables.$background;
   font-family: 'Roboto', sans-serif;
   user-select: none;;
 }

@@ -1,15 +1,15 @@
-@import './variables.scss';
-@import './mixins.scss';
+@use 'variables.scss';
+@use 'mixins.scss';
 
  .squares {
-    @include flexRow;
+    @include mixins.flexRow;
     width: 100%;
     justify-content: center;
     margin-top: 1rem;
     gap:25px;
 
     .square {
-      @include flexColumn;
+      @include mixins.flexColumn;
       font-size: 20px;
       width: 160px;
       height: 100px;
@@ -23,21 +23,21 @@
       }
 
       &.rock {
-        background-color: $rock-button-bg;
-        border: 2px solid $rock-button-border;
-        color: $text-white;
+        background-color: variables.$rock-button-bg;
+        border: 2px solid variables.$rock-button-border;
+        color: variables.$text-white;
       }
 
       &.paper {
-        background-color: $paper-button-bg;
-        border: 2px solid $paper-button-border;
-        color: $text-white;
+        background-color: variables.$paper-button-bg;
+        border: 2px solid variables.$paper-button-border;
+        color: variables.$text-white;
       }
 
       &.scissors {
-        background-color: $scissors-button-bg;
-        border: 2px solid $scissors-button-border;
-        color: $text-white;
+        background-color: variables.$scissors-button-bg;
+        border: 2px solid variables.$scissors-button-border;
+        color: variables.$text-white;
       }
 
     }
