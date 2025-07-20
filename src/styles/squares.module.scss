@@ -9,6 +9,9 @@
     gap:25px;
 
     .square {
+      $borderWidth: 2px;
+      $borderRadius: 5%;
+
       @include mixins.flexColumn;
       font-size: 20px;
       width: 160px;
@@ -17,6 +20,27 @@
       font-weight: 700;
       position: relative;
       user-select: none;
+      max-width: 160px;
+      overflow: visible;
+
+      @mixin highlight($color) {
+
+        &::before{
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          translate: -50% -50%;
+          width: 100%;
+          height: 100%;
+          border-radius: $borderRadius;
+          background-color: transparent;
+          border-width: calc($borderWidth * 4) !important;
+          border-style: solid;
+          border-color: $color;
+        }
+        
+      }
 
       &.betting {
         cursor: pointer;
@@ -24,20 +48,35 @@
 
       &.rock {
         background-color: variables.$rock-button-bg;
-        border: 2px solid variables.$rock-button-border;
-        color: variables.$text-white;
+          border: $borderWidth solid variables.$rock-button-border;
+          color: variables.$text-white;
+
+        &.winner {
+          @include highlight(variables.$rock-button-border-win);
+
+        }
       }
 
       &.paper {
         background-color: variables.$paper-button-bg;
-        border: 2px solid variables.$paper-button-border;
+        border: $borderWidth solid variables.$paper-button-border;
         color: variables.$text-white;
+
+        &.winner {
+          border-color: variables.$paper-button-border-win;
+          @include highlight(variables.$paper-button-border-win);
+        }
       }
 
       &.scissors {
         background-color: variables.$scissors-button-bg;
-        border: 2px solid variables.$scissors-button-border;
+        border: $borderWidth solid variables.$scissors-button-border;
         color: variables.$text-white;
+
+        &.winner {
+          border-color: variables.$scissors-button-border-win;
+          @include highlight(variables.$scissors-button-border-win);
+        }
       }
 
     }
